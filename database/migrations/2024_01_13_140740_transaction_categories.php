@@ -18,9 +18,6 @@ class TransactionCategories extends Migration
             $table->string("name")->nullable(false);
             $table->boolean("eligibleForPoints")->default(0);
             $table->timestamps();
-
-            $table->foreign("creditCardUuid")->references("uuid")->on("credit_cards");
-            $table->foreign("transactionCategoryUuid")->references("uuid")->on("transaction_categories");
         });
     }
 
