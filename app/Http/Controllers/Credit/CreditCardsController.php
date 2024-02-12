@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Credit;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Credit\StoreCreditCardRequest;
+use App\Http\Resources\CreditCardResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Models\Credit;
@@ -18,7 +19,8 @@ class CreditCardsController extends Controller
     public function index()
     {
         $cards = Credit\CreditCard::all();
-        return response()->json($cards, 200);
+        $creditCardResources = CreditCardResource::collection($cards);
+        return response()->json($creditCardResources, 200);
     }
 
     /**
@@ -31,8 +33,11 @@ class CreditCardsController extends Controller
     {
         $validated = $request->validated();
         $card = Credit\CreditCard::create($validated);
+
+        $card->refresh();
+        $creditCardResource = new CreditCardResource($card);
         
-        return request()->json($card, 200);
+        return response()->json($creditCardResource, 200);
     }
 
     /**
@@ -43,7 +48,10 @@ class CreditCardsController extends Controller
      */
     public function show($uuid)
     {
-        return Credit\CreditCard::find($uuid);
+        $card = Credit\CreditCard::find($uuid);
+        $resource = new CreditCardResource($card);
+
+        return response()->json($resource, 200);
     }
 
     /**

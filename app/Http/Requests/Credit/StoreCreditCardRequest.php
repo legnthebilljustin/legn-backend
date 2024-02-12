@@ -24,6 +24,7 @@ class StoreCreditCardRequest extends FormRequest
     public function rules()
     {
         return [
+            // might be a good idea to add a unique here?
             "name" => "required|string",
             "bank" => "required|string",
             "creditLimit" => "required|numeric",
