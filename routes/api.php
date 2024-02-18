@@ -30,6 +30,8 @@ Route::get("/test", function() {
                 "transactions" => Credit\TransactionsController::class,
                 "rewardMultipliers" => Credit\RewardMultipliersController::class
             ]);
+
+            Route::get("/allTransactionsByCard/{creditCardUuid}", [Credit\TransactionsController::class, "allTransactionsByCard"]);
         });
     });
 // });

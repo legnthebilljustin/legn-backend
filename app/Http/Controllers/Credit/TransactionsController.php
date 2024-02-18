@@ -4,20 +4,21 @@ namespace App\Http\Controllers\Credit;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Credit\StoreTransactionRequest;
+use App\Http\Resources\TransactionResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Credit;
+use App\Models\Credit\CreditCard;
 
 class TransactionsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function allTransactionsByCard(CreditCard $creditCard)
     {
-        //
+        $transactions = $creditCard->transactions;
+        $transactionResource = TransactionResource::collection($transactions);
+        return response()->json([
+            "transactions" => $transactionResource
+        ]);
     }
 
     /**
@@ -38,7 +39,8 @@ class TransactionsController extends Controller
 
         if ($category["eligibleForPoints"]) {
             $rewardPointsMultiplier = $category->rewardMultipliers()->where("creditCardUuid", $card->uuid)->first();
-            $multiplier = $rewardPointsMultiplier->multiplier;
+            
+            $multiplier = $rewardPointsMultiplier ? $rewardPointsMultiplier->multiplier : 1;
             $initialReward = intval($validated["amount"] / $card["amountPerPoint"]);
 
             $validated["rewardPoints"] = $initialReward * $multiplier;

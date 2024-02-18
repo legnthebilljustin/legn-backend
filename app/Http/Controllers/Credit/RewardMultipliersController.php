@@ -28,11 +28,10 @@ class RewardMultipliersController extends Controller
     public function store(StoreRewardMultiplierRequest $request)
     {
         $validated = $request->validated();
-        $data = RewardMultiplier::create($validated);
+        RewardMultiplier::create($validated);
 
         return response()->json([
             "message" => "Reward multiplier has been created.",
-            "data" => $data
         ]);
     }
 
