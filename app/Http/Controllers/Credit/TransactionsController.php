@@ -54,9 +54,11 @@ class TransactionsController extends Controller
             return Credit\CreditTransaction::create($validated);
         });
 
+        $transactionResource = new TransactionResource($newTransaction);
+
         return response()->json([
             "message" => "New credit card transaction has been added.",
-            "transaction" => $newTransaction
+            "transaction" => $transactionResource
         ], 200);
     }
 
