@@ -9,15 +9,45 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Credit;
 use App\Models\Credit\CreditCard;
+use App\Models\Credit\CreditTransaction;
+use Carbon\Carbon;
 
 class TransactionsController extends Controller
 {
     public function allTransactionsByCard(CreditCard $creditCard)
     {
         $transactions = $creditCard->transactions;
-        $transactionResource = TransactionResource::collection($transactions);
+        $formatted = TransactionResource::collection($transactions);
         return response()->json([
-            "transactions" => $transactionResource
+            "transactions" => $formatted
+        ]);
+    }
+
+    public function afterBillingDate(CreditCard $creditCard)
+    {
+        /** TODO: transfer this into a repository
+         * this can be used in calculating outstanding balance
+         */
+        // get the current date and time
+        $now = Carbon::now();
+        $billingDate = Carbon::now()->day($creditCard->billingDate);
+
+        // if current day(int) is greater than $billingDate, starting should be date + 1 day?
+        if ($now->greaterThan($billingDate)) {
+            $startingDate = $billingDate; 
+        }
+        else {
+            $startingDate = $billingDate->subMonth();
+        }
+        
+        $transactions = CreditTransaction::where("creditCardUuid", $creditCard->uuid)
+                            ->where("date", ">", $startingDate)
+                            ->get();
+        
+        $resource = TransactionResource::collection($transactions);
+
+        return response()->json([
+            "transactions" => $resource
         ]);
     }
 

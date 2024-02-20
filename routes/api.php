@@ -24,6 +24,11 @@ Route::get("/test", function() {
     Route::group(["prefix" => "/credit"], function() {
 
         Route::group(["prefix" => "/v1"], function() {
+
+            Route::group(["prefix" => "/transactions"], function() {
+                Route::get("/afterBillingDate/{creditCardUuid}", [Credit\TransactionsController::class, "afterBillingDate"]);
+            });
+
             Route::apiResources([
                 "cards" => Credit\CreditCardsController::class,
                 "transactionCategories" => Credit\TransactionCategoriesController::class,
