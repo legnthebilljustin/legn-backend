@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Credit\StoreCreditCardRequest;
 use App\Http\Resources\CreditCardResource;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+
 use App\Models\Credit;
 
 class CreditCardsController extends Controller
