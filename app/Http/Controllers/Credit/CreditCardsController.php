@@ -8,14 +8,10 @@ use App\Http\Resources\CreditCardResource;
 use Illuminate\Http\Request;
 
 use App\Models\Credit;
+use App\Repositories\CreditTransactionRepository;
 
 class CreditCardsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $cards = Credit\CreditCard::all();

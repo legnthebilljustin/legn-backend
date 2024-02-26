@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Credit;
+use App\Http\Controllers\AuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,7 +20,11 @@ Route::get("/test", function() {
     return "hello";
 });
 
-// Route::middleware('auth:sanctum')->group(function() {
+Route::group(["prefix" => "auth"], function() {
+    Route::post("login", [AuthController::class, "login"]);
+});
+
+Route::middleware('auth:sanctum')->group(function() {
 
     Route::group(["prefix" => "/credit"], function() {
 
@@ -33,10 +38,11 @@ Route::get("/test", function() {
                 "cards" => Credit\CreditCardsController::class,
                 "transactionCategories" => Credit\TransactionCategoriesController::class,
                 "transactions" => Credit\TransactionsController::class,
-                "rewardMultipliers" => Credit\RewardMultipliersController::class
+                "rewardMultipliers" => Credit\RewardMultipliersController::class,
+                "payments" => Credit\PaymentsController::class,
             ]);
 
             Route::get("/allTransactionsByCard/{creditCardUuid}", [Credit\TransactionsController::class, "allTransactionsByCard"]);
         });
     });
-// });
+});

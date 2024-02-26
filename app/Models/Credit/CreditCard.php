@@ -5,6 +5,7 @@ namespace App\Models\Credit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Credit\CreditTransaction;
+use App\Models\Credit\Payment;
 use App\Models\Credit\RewardMultiplier;
 use App\Traits\UUID;
 
@@ -46,5 +47,10 @@ class CreditCard extends Model
     public function rewardMultipliers()
     {
         return $this->hasMany(RewardMultiplier::class, "creditCardUuid");
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, "creditCardUuid");
     }
 }

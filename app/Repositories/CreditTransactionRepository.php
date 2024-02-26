@@ -6,6 +6,8 @@ use App\Models\Credit\CreditCard;
 use App\Models\Credit\CreditTransaction;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use App\Services\TransactionCategoryService;
+use App\Enums\TransactionCategories;
 
 class CreditTransactionRepository
 {
@@ -17,6 +19,19 @@ class CreditTransactionRepository
                 ->where("date", ">", $startingDate)
                 ->orderBy("date", "desc")
                 ->get();
+    }
+
+    public function getCurrentBalance(CreditCard $creditCard)
+    {
+        $transactions = $this->getTransactionsAfterLastBilling($creditCard);
+    
+        $categoryUuidToExclude = TransactionCategoryService::getCategoryUuid(TransactionCategories::PAYMENT["name"]);
+
+        $totalAmount = $transactions
+                ->where('transaction_type', '!=', $categoryUuidToExclude)
+                ->sum('amount');
+                
+        return $totalAmount;
     }
 
     private function determineStartingDate(CreditCard $creditCard)
