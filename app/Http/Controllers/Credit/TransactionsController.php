@@ -33,9 +33,13 @@ class TransactionsController extends Controller
     {
         $transactions = $this->creditTransactionRepo->getTransactionsAfterLastBilling($creditCard);
         $resource = TransactionResource::collection($transactions);
-        
+        $totalAmount = $resource->sum("amount");
+        $totalRewardPoints = $resource->sum("rewardPoints");
+
         return response()->json([
-            "transactions" => $resource
+            "transactions" => $resource,
+            "totalAmount" => $totalAmount,
+            "totalRewardPoints" => $totalRewardPoints
         ]);
     }
 

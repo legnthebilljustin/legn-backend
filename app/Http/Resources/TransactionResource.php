@@ -8,22 +8,14 @@ class TransactionResource extends JsonResource
 {
     public function toArray($request): array
     {
-        $card = $this->card;
         $category = $this->transactionCategory;
         return [
             "uuid"              => $this->uuid,
             "merchantName"      => $this->merchantName,
-            "creditCard"        => [
-                "uuid"      => $card ? $card->uuid : null,
-                "bank"      => $card ? $card->bank : null,
-            ],
-            "category"          => [
-                "uuid"      => $category->uuid ?? null,
-                "name"      => $category->name ?? null
-            ],
+            "category"          => $category->name ?? "",
             "amount"            => $this->amount,
             "rewardPoints"      => $this->rewardPoints,
-            "date"              => $this->date
+            "date"              => $this->date,
         ];
     }
 }

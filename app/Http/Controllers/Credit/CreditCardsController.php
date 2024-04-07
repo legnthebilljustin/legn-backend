@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Credit;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Credit\StoreCreditCardRequest;
+use App\Http\Resources\CreditCardListResource;
 use App\Http\Resources\CreditCardResource;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,7 @@ class CreditCardsController extends Controller
     public function index()
     {
         $cards = Credit\CreditCard::all();
-        $creditCardResources = CreditCardResource::collection($cards);
+        $creditCardResources = CreditCardListResource::collection($cards);
         return response()->json($creditCardResources, 200);
     }
 

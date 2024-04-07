@@ -24,7 +24,7 @@ Route::group(["prefix" => "auth"], function() {
     Route::post("login", [AuthController::class, "login"]);
 });
 
-Route::middleware('auth:sanctum')->group(function() {
+// Route::middleware('auth:sanctum')->group(function() {
 
     Route::group(["prefix" => "/credit"], function() {
 
@@ -45,4 +45,4 @@ Route::middleware('auth:sanctum')->group(function() {
             Route::get("/allTransactionsByCard/{creditCardUuid}", [Credit\TransactionsController::class, "allTransactionsByCard"]);
         });
     });
-});
+// });

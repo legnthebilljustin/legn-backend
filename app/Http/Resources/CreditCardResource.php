@@ -13,7 +13,6 @@ class CreditCardResource extends JsonResource
             "name"  => $this->name,
             "bank"  => $this->bank,
             "creditLimit"   => $this->creditLimit,
-            "bank"  => $this->bank,
             "amountPerPoint"    => $this->amountPerPoint,
             "color"  => $this->color,
             "totals" => [
