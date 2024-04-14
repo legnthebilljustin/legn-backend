@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
+use App\Http\Requests\Auth\RegisterUserRequest;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+
     public function login(Request $request)
     {
         $request->validate([
@@ -16,17 +19,32 @@ class AuthController extends Controller
         ]);
 
         $credentials = $request->only("email", "password");
-
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $token = $user->createToken($user->id)->plainTextToken;
-
-            return response()->cookie("token", $token, 36000);
+        if (!Auth::attempt($credentials)) {
+            return response()->json([
+                "error" => "Invalid credentials.",
+                400
+            ]);
         }
 
+        $user = Auth::user();
+        $token = $user->createToken('auth', ["credit:*"], now()->addHours(8));
+
         return response()->json([
-            "error" => "Invalid credentials.",
-            400
+            "token" => $token->plainTextToken
+        ], 200);
+    }
+
+    public function register(RegisterUserRequest $request)
+    {
+        $validated = $request->validated();
+        $user = new User();
+        $user->name = $validated["name"];
+        $user->email = $validated["email"];
+        $user->password = Hash::make($validated["password"]);
+        $user->save();
+
+        return response()->json([
+            "message" => "Registration successful."
         ]);
     }
 }
