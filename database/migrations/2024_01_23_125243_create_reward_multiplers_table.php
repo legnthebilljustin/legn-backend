@@ -29,6 +29,6 @@ class CreateRewardMultiplersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reward_multiplers');
+        Schema::dropIfExists('reward_multipliers');
     }
 }

@@ -26,7 +26,7 @@ class UpdateCreditTransactionsTable extends Migration
     public function down()
     {
         Schema::table('credit_transactions', function (Blueprint $table) {
-            $table->timestamp('date')->nullable(false)->change();
+            $table->date('date')->nullable(false)->change();
         });
     }
 }

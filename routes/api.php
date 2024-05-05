@@ -20,12 +20,11 @@ Route::get("/test", function() {
     return "hello";
 });
 
-Route::post("/alakjsakj-dwanjkawdsa", function() {
 
-});
 
 Route::group(["prefix" => "auth"], function() {
     Route::post("login", [AuthController::class, "login"]);
+    Route::post("register", [AuthController::class, "register"]);
 });
 
 Route::middleware('auth:sanctum')->group(function() {
