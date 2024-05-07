@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Auth\RegisterUserRequest;
+use App\Http\Resources\UserDetailsResource;
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -27,9 +28,12 @@ class AuthController extends Controller
         }
 
         $user = Auth::user();
-        $token = $user->createToken('auth', ["credit:*"], now()->addHours(8));
+        $token = $user->createToken('auth', ["credit:*"], now()->addHours(4));
+
+        $userResource = new UserDetailsResource($user);
 
         return response()->json([
+            "user" => $userResource,
             "token" => $token->plainTextToken
         ], 200);
     }
