@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Auth\RegisterUserRequest;
-use App\Http\Resources\UserDetailsResource;
+use App\Http\Resources\UserDetailsResource; 
 use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
@@ -22,19 +22,18 @@ class AuthController extends Controller
         $credentials = $request->only("email", "password");
         if (!Auth::attempt($credentials)) {
             return response()->json([
-                "error" => "Invalid credentials.",
-                400
-            ]);
+                "error" => "Invalid credentials."
+            ], 401);
         }
 
         $user = Auth::user();
         $token = $user->createToken('auth', ["credit:*"], now()->addHours(4));
+        $user->token = $token->plainTextToken;
 
         $userResource = new UserDetailsResource($user);
 
         return response()->json([
-            "user" => $userResource,
-            "token" => $token->plainTextToken
+            "user" => $userResource
         ], 200);
     }
 
