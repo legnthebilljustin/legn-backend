@@ -13,7 +13,7 @@ class UpdateTransactionRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,7 +24,9 @@ class UpdateTransactionRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            "merchantName" => "required|string",
+            "amount" => "required|numeric",
+            "date" => "required|date"
         ];
     }
 }

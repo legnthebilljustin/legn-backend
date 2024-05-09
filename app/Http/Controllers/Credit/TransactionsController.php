@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Credit;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Credit\StoreTransactionRequest;
+use App\Http\Requests\Credit\UpdateTransactionRequest;
 use App\Http\Resources\TransactionResource;
 use App\Models\Credit\CreditCard;
 use App\Repositories\Credit\CreditCardRepository;
 use App\Repositories\Credit\CreditTransactionRepository;
 use App\Repositories\Credit\TransactionCategoryRepository;
+use Illuminate\Http\Request;
 
 class TransactionsController extends Controller
 {
@@ -76,14 +78,14 @@ class TransactionsController extends Controller
         ], 200);
     }
 
-    public function update(StoreTransactionRequest $request, $uuid)
+    public function update(UpdateTransactionRequest $request, $uuid)
     {
         $transaction = $this->creditTransactionRepo->getTransactionByUuid($uuid);
         
         $validated = $request->validated();
 
-        $card = $this->creditCardRepo->getCreditCard($validated["creditCardUuid"]);
-        $category = $this->transactionCategoryRepo->getCategory($validated["transactionCategoryUuid"]);
+        $card = $this->creditCardRepo->getCreditCard($transaction->creditCardUuid);
+        $category = $this->transactionCategoryRepo->getCategory($transaction->transactionCategoryUuid);
 
         $updatedTransaction = $this->creditTransactionRepo->updateTransaction(
             $card,
