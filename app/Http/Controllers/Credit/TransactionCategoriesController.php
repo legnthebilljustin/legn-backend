@@ -63,8 +63,13 @@ class TransactionCategoriesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($uuid)
     {
-        //
+        $category = Credit\TransactionCategory::where("uuid", $uuid)->firstOrFail();
+        $category->delete();
+
+        return response()->json([
+            "message" => "Transaction category deleted."
+        ], 200);
     }
 }
