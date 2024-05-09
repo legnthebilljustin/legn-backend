@@ -9,10 +9,17 @@ use App\Http\Resources\CreditCardResource;
 use Illuminate\Http\Request;
 
 use App\Models\Credit;
-use App\Repositories\CreditTransactionRepository;
+use App\Repositories\Credit\CreditCardRepository;
 
 class CreditCardsController extends Controller
 {
+    private $creditCardRepo;
+
+    public function __construct(CreditCardRepository $creditCardRepository)
+    {
+        $this->creditCardRepo = $creditCardRepository;
+    }
+
     public function index()
     {
         $cards = Credit\CreditCard::all();
@@ -45,7 +52,7 @@ class CreditCardsController extends Controller
      */
     public function show($uuid)
     {
-        $card = Credit\CreditCard::find($uuid);
+        $card = $this->creditCardRepo->getCreditCard($uuid);
         $resource = new CreditCardResource($card);
 
         return response()->json($resource, 200);

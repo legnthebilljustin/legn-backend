@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Credit\CreditCard;
+use Illuminate\Support\Facades\DB;
 
 class CreditCardSeeder extends Seeder
 {

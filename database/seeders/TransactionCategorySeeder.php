@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Credit\TransactionCategory;
 use App\Enums\TransactionCategories;
+use Illuminate\Support\Facades\DB;
 
 class TransactionCategorySeeder extends Seeder
 {
