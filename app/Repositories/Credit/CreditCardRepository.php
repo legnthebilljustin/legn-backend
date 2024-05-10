@@ -31,4 +31,9 @@ class CreditCardRepository
         $card->decrement(CardKeysEnum::TOTAL_AMOUNT_SPENT, $amount);
         $card->decrement(CardKeysEnum::TOTAL_REWARD_POINTS, $rewardPoints);
     }
+
+    public function incrementAggregate(CreditCard $card, string $propertyName, float $amount) 
+    {
+        $card->increment($propertyName, $amount);
+    }
 }

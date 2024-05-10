@@ -53,4 +53,9 @@ class CreditCard extends Model
     {
         return $this->hasMany(Payment::class, "creditCardUuid");
     }
+
+    public function statements()
+    {
+        return $this->hasMany(Statement::class, "creditCardUuid");
+    }
 }
