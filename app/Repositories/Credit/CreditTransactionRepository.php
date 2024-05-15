@@ -2,13 +2,13 @@
 
 namespace App\Repositories\Credit;
 
+use App\Enums\CardKeysEnum;
 use App\Models\Credit\CreditCard;
 use App\Models\Credit\CreditTransaction;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
 use App\Services\TransactionCategoryService;
 use App\Enums\TransactionCategories;
-use App\Http\Requests\Credit\StoreTransactionRequest;
 use App\Models\Credit\TransactionCategory;
 use App\Services\Credit\RewardPointsService;
 use Illuminate\Support\Facades\DB;
@@ -18,7 +18,10 @@ class CreditTransactionRepository
     private $creditCardRepo;
     private $rpService;
 
-    public function __construct(CreditCardRepository $creditCardRepository, RewardPointsService $rewardPointsService) {
+    public function __construct(
+        CreditCardRepository $creditCardRepository, 
+        RewardPointsService $rewardPointsService
+    ) {
         $this->creditCardRepo = $creditCardRepository;
         $this->rpService = $rewardPointsService;
     }
@@ -38,7 +41,20 @@ class CreditTransactionRepository
                 ->get();
     }
 
-    public function getCurrentBalance(CreditCard $creditCard)
+    public function getTransactionsBetweenTwoBillingDates(
+        CreditCard $creditCard, 
+        Carbon $billingDate, 
+        Carbon $lastMonthBillingDate
+    ): Collection
+    {
+        return CreditTransaction::where("creditCardUuid", $creditCard->uuid)
+                ->whereDate("date", "<=", $billingDate)
+                ->whereDate("date", ">", $lastMonthBillingDate)
+                ->orderBy("date", "desc")
+                ->get();
+    }
+
+    public function getCurrentBalance(CreditCard $creditCard): int
     {
         $transactions = $this->getTransactionsAfterLastBilling($creditCard);
     
@@ -58,9 +74,17 @@ class CreditTransactionRepository
     ): CreditTransaction
     {
         $formData["rewardPoints"] = $this->rpService->calculateRewardPoints($category, $card, $formData["amount"]);
-        return DB::transaction(function() use($card, $formData) {
+
+        // yeah this is buggy
+        $isAFinanceCharge = $category->name === TransactionCategories::FINANCE_CHARGE["name"];
+        
+        return DB::transaction(function() use($card, $formData, $isAFinanceCharge) {
             $card->increment("totalTransactions");
             $this->creditCardRepo->incrementCardTotals($card, $formData["amount"], $formData["rewardPoints"]);
+
+            if ($isAFinanceCharge) {
+                $this->creditCardRepo->incrementAggregate($card, CardKeysEnum::TOTAL_FINANCE_CHARGES, $formData["amount"]);
+            }
 
             return CreditTransaction::create($formData);
         });

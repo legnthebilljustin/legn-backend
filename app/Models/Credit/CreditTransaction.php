@@ -17,6 +17,7 @@ use App\Traits\UUID;
  * @property string $transactionCategoryUuid
  * @property float $amount
  * @property int $rewardPoints
+ * @property string $statementUuid
  * @property \Illuminate\Support\Carbon|null $date
  */
 class CreditTransaction extends Model
@@ -44,5 +45,10 @@ class CreditTransaction extends Model
     public function transactionCategory()
     {
         return $this->belongsTo(TransactionCategory::class, "transactionCategoryUuid");
+    }
+
+    public function statement()
+    {
+        return $this->belongsTo(Statement::class, "statementUuid");
     }
 }

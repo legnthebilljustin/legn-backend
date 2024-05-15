@@ -2,9 +2,11 @@
 
 namespace App\Http\Requests\Credit;
 
+use App\Rules\ValidateMonth;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class UpdateTransactionCategoryRequest extends FormRequest
+class StoreStatementRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +26,13 @@ class UpdateTransactionCategoryRequest extends FormRequest
     public function rules()
     {
         return [
-            "name" => "required|string",
-            "eligibleForPoints" => "required|boolean"
+            "creditCardUuid" => [
+                "required",
+                "uuid",
+                Rule::exists("credit_cards", "uuid")
+            ],
+            "month" => ["required", new ValidateMonth],
+            "year" => "required|numeric"
         ];
     }
 }

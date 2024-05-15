@@ -4,27 +4,25 @@ namespace App\Http\Controllers\Credit;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Credit\StoreTransactionCategoryRequest;
+use App\Http\Requests\Credit\UpdateTransactionCategoryRequest;
 use Illuminate\Http\Request;
 use App\Models\Credit;
+use App\Repositories\Credit\TransactionCategoryRepository;
 
 class TransactionCategoriesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    private $transactionCategoryRepo;
+
+    public function __construct(TransactionCategoryRepository $transactionCategoryRepository)
+    {
+        $this->transactionCategoryRepo = $transactionCategoryRepository;
+    }
+
     public function index()
     {
         return Credit\TransactionCategory::all();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(StoreTransactionCategoryRequest $request)
     {
         $validated = $request->validated();
@@ -34,35 +32,17 @@ class TransactionCategoriesController extends Controller
         return response()->json(["message" => "Transaction category has been created."], 200);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function update(UpdateTransactionCategoryRequest $request, $uuid)
     {
-        //
+        $validated = $request->validated();
+        $category = $this->transactionCategoryRepo->updateCategory($uuid, $validated);
+
+        return response()->json([
+            "message" => "Transaction category has been updated.",
+            "category" => $category
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($uuid)
     {
         $category = Credit\TransactionCategory::where("uuid", $uuid)->firstOrFail();

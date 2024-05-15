@@ -13,6 +13,7 @@ use App\Models\Credit\CreditCard;
  * @property string $creditCardUuid
  * @property string $amount
  * @property date $date
+ * @property string $statementUuid
  */
 class Payment extends Model
 {
@@ -28,5 +29,10 @@ class Payment extends Model
     public function creditCard()
     {
         return $this->belongsTo(CreditCard::class, "creditCardUuid");
+    }
+
+    public function statement()
+    {
+        return $this->belongsTo(Statement::class, "statementUuid");
     }
 }

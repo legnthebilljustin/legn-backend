@@ -46,6 +46,12 @@ Route::middleware('auth:sanctum')->group(function() {
             ]);
 
             Route::get("/allTransactionsByCard/{creditCardUuid}", [Credit\TransactionsController::class, "allTransactionsByCard"]);
+
+            Route::group(["prefix" => "/statements"], function() {
+                Route::get("/statementsByCard/{creditCardUuid}", [Credit\StatementsController::class, "getStatementsByCard"]);
+                Route::get("/transactionsAndPayments/{statementUuid}", [Credit\StatementsController::class, "getStatementTransactionsAndPayments"]);
+                Route::post("/create", [Credit\StatementsController::class, "createStatement"]);
+            });
         });
     });
 });
