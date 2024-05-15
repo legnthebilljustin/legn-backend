@@ -41,7 +41,20 @@ class CreditTransactionRepository
                 ->get();
     }
 
-    public function getCurrentBalance(CreditCard $creditCard)
+    public function getTransactionsBetweenTwoBillingDates(
+        CreditCard $creditCard, 
+        Carbon $billingDate, 
+        Carbon $lastMonthBillingDate
+    ): Collection
+    {
+        return CreditTransaction::where("creditCardUuid", $creditCard->uuid)
+                ->whereDate("date", "<=", $billingDate)
+                ->whereDate("date", ">", $lastMonthBillingDate)
+                ->orderBy("date", "desc")
+                ->get();
+    }
+
+    public function getCurrentBalance(CreditCard $creditCard): int
     {
         $transactions = $this->getTransactionsAfterLastBilling($creditCard);
     

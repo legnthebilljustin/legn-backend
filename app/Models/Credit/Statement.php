@@ -19,6 +19,12 @@ class Statement extends Model
 {
     use HasFactory;
     use UUID;
+
+    protected $guarded = [];
+    protected $dates = ["dueDate", "statementDate"];
+    protected $fillable = [
+        "creditCardUuid", "statementDate", "amountDue", "dueDate"
+    ]; 
     
     public function transactions()
     {

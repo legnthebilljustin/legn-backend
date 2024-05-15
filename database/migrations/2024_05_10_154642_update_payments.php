@@ -16,11 +16,9 @@ class UpdatePayments extends Migration
         Schema::table("payments", function(Blueprint $table) {
             $table->float("amount");
             $table->uuid("creditCardUuid");
-            $table->uuid("statementUuid");
             $table->date("date");
 
             $table->foreign("creditCardUuid")->references("uuid")->on("credit_cards");
-            $table->foreign("statementUuid")->references("uuid")->on("statements");
         });
     }
 
