@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Credit;
 
 use App\Http\Requests\Credit\StoreStatementRequest;
 use App\Http\Resources\TransactionResource;
+use App\Models\Credit\CreditCard;
 use App\Repositories\Credit\CreditCardRepository;
 use App\Repositories\Credit\CreditTransactionRepository;
 use App\Repositories\Credit\StatementRepository;
-use App\Resources\StatementResource;
 use App\Services\DateService;
 
 class StatementsController
@@ -27,15 +27,12 @@ class StatementsController
         $this->creditTransactionRepo = $creditTransactionRepository;
     }
 
-    public function getStatementsByCard(string $creditCardUuid) 
+    public function getStatementsByCard(CreditCard $creditCard) 
     {
-        $card = $this->creditCardRepo->getCreditCard($creditCardUuid);
-        $statements = $this->statementRepo->getStatementsByCard($card);
-
-        $formattedStatementList = StatementResource::collection($statements);
+        $paginatedStatements = $this->statementRepo->getStatementsByCard($creditCard->uuid);
         
         return response()->json([
-            "statements" => $formattedStatementList
+            "paginated" => $paginatedStatements
         ]);
     }
 

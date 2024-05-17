@@ -5,7 +5,7 @@ namespace App\Repositories\Credit;
 use App\Models\Credit\CreditCard;
 use App\Models\Credit\Statement;
 use Carbon\Carbon;
-use Illuminate\Support\Collection;
+use Illuminate\Contracts\Pagination\Paginator;
 
 class StatementRepository
 {
@@ -16,9 +16,9 @@ class StatementRepository
         return $statement;
     }
     
-    public function getStatementsByCard(CreditCard $card): Collection
+    public function getStatementsByCard(string $creditCardUuid): Paginator
     {
-        $statements = Statement::where("creditCardUuid", $card->uuid)
+        $statements = Statement::where("creditCardUuid", $creditCardUuid)
             ->orderByDesc("statementDate")
             ->simplePaginate(15);
 
