@@ -39,12 +39,12 @@ class StatementsController
     public function getStatementTransactionsAndPayments(string $statementUuid)
     {
         $statement = $this->statementRepo->getStatementByUuid($statementUuid);
-
         $formattedTransactions = TransactionResource::collection($statement->transactions);
 
+        // TODO: Payments here
+
         return response()->json([
-            "transactions" => $formattedTransactions,
-            "payments" => $statement->payments
+            "transactions" => $formattedTransactions
         ]);
     }
 
@@ -59,7 +59,6 @@ class StatementsController
         $dateService = new DateService($validated["month"], intval($card->billingDate), $validated["year"]);
         $billingDate = $dateService->generateDate();
 
-        //check
         $this->statementRepo->checkIfStatementForMonthAndYearExists($card->uuid, $billingDate);
         
         $lastMonthBillingDate = $dateService->generateLastMonthBillingDate();
@@ -69,7 +68,7 @@ class StatementsController
 
         $totalAmount = collect($transactions)->sum("amount");
 
-        $statement = $this->statementRepo->generateStatement($card, $totalAmount, $billingDate, $dueDate);
+        $statement = $this->statementRepo->generateStatement($card, $totalAmount, $billingDate, $dueDate, $transactions);
 
         return response()->json([
             "statement" => $statement

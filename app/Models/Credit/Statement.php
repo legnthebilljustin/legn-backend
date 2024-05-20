@@ -31,11 +31,6 @@ class Statement extends Model
         return $this->hasMany(CreditTransaction::class, "statementUuid");
     }
 
-    public function payments()
-    {
-        return $this->hasMany(Payment::class, "statementUuid");
-    }
-
     public function creditCard()
     {
         return $this->belongsTo(CreditCard::class, "creditCardUuid");

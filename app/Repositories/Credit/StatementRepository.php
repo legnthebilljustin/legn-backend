@@ -6,13 +6,14 @@ use App\Models\Credit\CreditCard;
 use App\Models\Credit\Statement;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\Paginator;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class StatementRepository
 {
     public function getStatementByUuid(string $uuid): Statement
     {
         $statement = Statement::where("uuid", $uuid)->firstOrFail();
-
         return $statement;
     }
     
@@ -39,18 +40,28 @@ class StatementRepository
     }
 
     public function generateStatement(
-        CreditCard $card, int $amountDue,
-        Carbon $statementDate, Carbon $dueDate
+        CreditCard $card, float $amountDue,
+        Carbon $statementDate, Carbon $dueDate,
+        Collection $transactions
     )
     {
         $formattedDueDate = $dueDate->format("Y-m-d");
         $formattedStatementDate = $statementDate->format("Y-m-d");
-        
-        return Statement::create([
-            "creditCardUuid" => $card->uuid,
-            "statementDate" => $formattedStatementDate,
-            "dueDate" => $formattedDueDate,
-            "amountDue" => $amountDue
-        ]);
+
+        return DB::transaction(function() use($card, $formattedStatementDate, $formattedDueDate, $amountDue, $transactions) {
+            $statement = Statement::create([
+                "creditCardUuid" => $card->uuid,
+                "statementDate" => $formattedStatementDate,
+                "dueDate" => $formattedDueDate,
+                "amountDue" => $amountDue
+            ]);
+            
+            $transactions->each(function($item) use($statement) {
+                $item->statementUuid = $statement->uuid;
+                $item->save();
+            });
+
+            return $statement;
+        });
     }
 }

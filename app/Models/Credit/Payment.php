@@ -30,9 +30,4 @@ class Payment extends Model
     {
         return $this->belongsTo(CreditCard::class, "creditCardUuid");
     }
-
-    public function statement()
-    {
-        return $this->belongsTo(Statement::class, "statementUuid");
-    }
 }
