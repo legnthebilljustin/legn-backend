@@ -10,7 +10,6 @@ use App\Models\Credit\CreditCard;
 use App\Repositories\Credit\CreditCardRepository;
 use App\Repositories\Credit\CreditTransactionRepository;
 use App\Repositories\Credit\TransactionCategoryRepository;
-use Illuminate\Http\Request;
 
 class TransactionsController extends Controller
 {
