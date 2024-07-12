@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Credit;
+use App\Http\Controllers\Crypto;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -45,6 +46,15 @@ Route::middleware('auth:sanctum')->group(function() {
                 Route::get("/transactionsAndPayments/{statementUuid}", [Credit\StatementsController::class, "getStatementTransactionsAndPayments"]);
                 Route::post("/create", [Credit\StatementsController::class, "createStatement"]);
             });
+        });
+    });
+
+    Route::group(["prefix" => "/crypto"], function() {
+        Route::group(["prefix" => "/v1"], function() {
+            Route::apiResources([
+                "deposits" => Crypto\DepositsController::class,
+                "trades" => Crypto\TradesController::class
+            ]);
         });
     });
 });
