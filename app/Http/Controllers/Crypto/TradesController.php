@@ -3,18 +3,22 @@
 namespace App\Http\Controllers\Crypto;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Crypto\StoreTradeRequest;
+use App\Http\Resources\TradesResource;
+use App\Models\Crypto\Trade;
+use App\Repositories\Crypto\TradesRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\ItemNotFoundException;
+use InvalidArgumentException;
 
 class TradesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+
+    protected $tradesRepo;
+
+    public function __construct(TradesRepository $tradesRepository)
     {
-        //
+        $this->tradesRepo = $tradesRepository;
     }
 
     /**
@@ -23,9 +27,17 @@ class TradesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreTradeRequest $request)
     {
-        //
+        $validated = $request->validated();
+
+        $trade = Trade::create($validated);
+
+        $resource = new TradesResource($trade);
+
+        return response()->json([
+            "data" => $resource
+        ]);
     }
 
     /**
@@ -34,9 +46,15 @@ class TradesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Trade $trade)
     {
-        //
+        $this->tradesRepo->doesTradeExist($trade);
+
+        $resource = new TradesResource($trade);
+
+        return response()->json([
+            "data" => $resource
+        ]);
     }
 
     /**
@@ -46,9 +64,17 @@ class TradesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreTradeRequest $request, Trade $trade)
     {
-        //
+        $this->tradesRepo->doesTradeExist($trade);
+
+        $validated = $request->validated();
+
+        $this->tradesRepo->updateTrade($trade, $validated);
+
+        return response()->json([
+            "data" => ""
+        ]);
     }
 
     /**
@@ -57,8 +83,14 @@ class TradesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Trade $trade)
     {
-        //
+        $this->tradesRepo->doesTradeExist($trade);
+
+        $trade->delete();
+
+        return response()->json([
+            "message" => "Trade deleted."
+        ]);
     }
 }
