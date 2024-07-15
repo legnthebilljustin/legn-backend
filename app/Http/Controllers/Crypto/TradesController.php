@@ -7,9 +7,6 @@ use App\Http\Requests\Crypto\StoreTradeRequest;
 use App\Http\Resources\TradesResource;
 use App\Models\Crypto\Trade;
 use App\Repositories\Crypto\TradesRepository;
-use Illuminate\Http\Request;
-use Illuminate\Support\ItemNotFoundException;
-use InvalidArgumentException;
 
 class TradesController extends Controller
 {

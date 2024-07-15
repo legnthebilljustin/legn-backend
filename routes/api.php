@@ -52,10 +52,12 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::group(["prefix" => "/crypto"], function() {
         Route::group(["prefix" => "/v1"], function() {
             Route::apiResource("/trades", Crypto\TradesController::class, ["except" => "index"]);
-
             Route::apiResources([
                 "deposits" => Crypto\DepositsController::class,
+                "cryptos" => Crypto\CryptosController::class
             ]);
+
+            Route::get("/allTrades/{crypto}", [Crypto\CryptosController::class, "getAllTradesByCrypto"]);
         });
     });
 });

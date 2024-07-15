@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * App/Models/Crypto/Trade
  * 
  * @property string $uuid
+ * @property-read string Collection<Crypto> $cryptoUuid
  * @property int $entryPrice - USD
  * @property int $amountUSD - USD
  * @property float $receivedCryptoAmount
@@ -20,6 +21,11 @@ use Illuminate\Database\Eloquent\Model;
 class Trade extends Model
 {
     use HasFactory, UUID;
+
+    protected $fillable = [
+        "cryptoUuid", "entryPrice", "amountUSD",
+        "receivedCryptoAmount", "fee", "finalCryptoAmount", "tradeDate"
+    ];
 
     public function crypto() {
         return $this->belongsTo(Crypto::class, "cryptoUuid");

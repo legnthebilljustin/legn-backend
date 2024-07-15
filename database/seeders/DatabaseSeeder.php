@@ -17,7 +17,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             CreditCardSeeder::class,
             TransactionCategorySeeder::class,
-            CreditTransactionSeeder::class
+            CreditTransactionSeeder::class,
+            CryptoSeeder::class,
+            CryptoWithTradesSeeder::class
         ]);
     }
 }

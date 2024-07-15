@@ -13,11 +13,17 @@ class UpdateTrades extends Migration
      */
     public function up()
     {
-        Schema::table("trades", function(Blueprint $table) {
-            $table->integer("purchasedAmount")->change();
+        /**
+         * when using `change` and `renameColumn` combo,
+         * laravel is resetting the column type to its original type if they are both done in a single migration
+         */
+        Schema::table('trades', function (Blueprint $table) {
+            $table->integer('purchasedAmount')->change();
+        });
 
-            $table->renameColumn("purchasedAmount", "amountUSD");
-            $table->renameColumn("purchaseDate", "tradeDate");
+        Schema::table('trades', function (Blueprint $table) {
+            $table->renameColumn('purchasedAmount', 'amountUSD');
+            $table->renameColumn('purchaseDate', 'tradeDate');
         });
     }
 
@@ -28,11 +34,13 @@ class UpdateTrades extends Migration
      */
     public function down()
     {
-        Schema::table("trades", function(Blueprint $table) {
-            $table->float("amountUSD")->change();
+       Schema::table('trades', function (Blueprint $table) {
+            $table->renameColumn('amountUSD', 'purchasedAmount');
+            $table->renameColumn('tradeDate', 'purchaseDate');
+        });
 
-            $table->renameColumn("amountUSD", "purchasedAmount");
-            $table->renameColumn("tradeDate", "purchaseDate");
+        Schema::table('trades', function (Blueprint $table) {
+            $table->float('purchasedAmount')->change();
         });
     }
 }
