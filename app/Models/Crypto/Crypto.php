@@ -18,6 +18,8 @@ class Crypto extends Model
 {
     use HasFactory, UUID;
 
+    protected $hidden = ["created_at", "updated_at"];
+
     public function trades() {
         return $this->hasMany(Trade::class, "cryptoUuid");
     }
