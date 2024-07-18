@@ -20,9 +20,12 @@ class DepositsController extends Controller
     {
         $deposits = Deposit::all();
 
+        $totalDepositAmount = $deposits->sum("depositAmount");
+
         $resource = DepositsResource::collection($deposits);
 
         return response()->json([
+            "totalDepositAmount" => $totalDepositAmount,
             "deposits" => $resource
         ]);
     }

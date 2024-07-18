@@ -28,6 +28,12 @@ class DepositsTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_get_deposits_total_amount()
+    {
+        $response = $this->getJson(RoutePathsEnum::CRYPTO_DEPOSIT_PATH);
+        $response->assertStatus(200);
+    }
+
     public function test_create_deposit()
     {
         $formData = [
