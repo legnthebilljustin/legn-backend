@@ -2,7 +2,8 @@
 
 namespace App\Providers;
 
-use App\Repositories\CreditTransactionRepository;
+use App\Repositories\Credit\CreditTransactionRepository;
+use App\Services\CurrencyService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -16,6 +17,10 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->bind(CreditTransactionRepository::class, function($app) {
             return new CreditTransactionRepository();
+        });
+
+        $this->app->singleton(CurrencyService::class, function($app) {
+            return new CurrencyService();
         });
     }
 
