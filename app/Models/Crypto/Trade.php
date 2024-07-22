@@ -22,6 +22,14 @@ class Trade extends Model
 {
     use HasFactory, UUID;
 
+    protected $casts = [
+        "tradeDate" => "date"
+    ];
+
+    protected $hidden = [
+        "created_at", "updated_at"
+    ];
+
     protected $fillable = [
         "cryptoUuid", "entryPrice", "amountUSD",
         "receivedCryptoAmount", "fee", "finalCryptoAmount", "tradeDate"

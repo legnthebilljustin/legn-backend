@@ -21,7 +21,7 @@ class DepositsResource extends JsonResource
             "exchangeToken" => $this->exchangeToken,
             "exchangePrice" => $this->exchangePrice,
             "totalAmount" => $this->totalAmount,
-            "depositDate" => $this->depositDate
+            "depositDate" => $this->depositDate->toDateString()
         ];
     }
 }

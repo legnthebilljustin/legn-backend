@@ -6,11 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Crypto\StoreDepositsRequest;
 use App\Http\Resources\DepositsResource;
 use App\Models\Crypto\Deposit;
+use App\Services\CurrencyService;
 use Illuminate\Http\Request;
 use InvalidArgumentException;
 
 class DepositsController extends Controller
 {
+    protected $currencyService;
+    
+    public function __construct(CurrencyService $currencyService)
+    {
+        $this->currencyService = $currencyService;    
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -18,11 +26,14 @@ class DepositsController extends Controller
      */
     public function index()
     {
-        $deposits = Deposit::all();
+        $deposits = Deposit::orderBy("depositDate", "desc")->get();
+
+        $totalDepositAmount = $deposits->sum("depositAmount");
 
         $resource = DepositsResource::collection($deposits);
 
         return response()->json([
+            "totalDepositAmount" => $totalDepositAmount,
             "deposits" => $resource
         ]);
     }
@@ -37,7 +48,14 @@ class DepositsController extends Controller
     {
         $validated = $request->validated();
 
-        $newDeposit = Deposit::create($validated);
+        // convert currency to cents
+        $propertiesToConvert = [
+            "depositAmount", "fee", "exchangePrice", "totalAmount"
+        ];
+
+        $converted = $this->currencyService->convertToCents($request, $propertiesToConvert);
+
+        $newDeposit = Deposit::create($converted);
         $resource = new DepositsResource($newDeposit);
 
         return response()->json([

@@ -28,14 +28,20 @@ class DepositsTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_get_deposits_total_amount()
+    {
+        $response = $this->getJson(RoutePathsEnum::CRYPTO_DEPOSIT_PATH);
+        $response->assertStatus(200);
+    }
+
     public function test_create_deposit()
     {
         $formData = [
-            "depositAmount" => 100000,
-            "fee" => 2500,
+            "depositAmount" => 1000.00,
+            "fee" => 25,
             "exchangeToken" => "USDT",
-            "exchangePrice" => 5129,
-            "totalAmount" => 1245132,
+            "exchangePrice" => 51.29,
+            "totalAmount" => 12451.32,
             "depositDate" => "2024-02-01"
         ];
 
@@ -48,10 +54,10 @@ class DepositsTest extends TestCase
     {
         $formData = [
             "depositAmount" => "one hundred",
-            "fee" => 2500,
+            "fee" => 25.00,
             "exchangeToken" => "USDT",
-            "exchangePrice" => 5129,
-            "totalAmount" => 1245132,
+            "exchangePrice" => 51.29,
+            "totalAmount" => 12451.32,
             "depositDate" => "2024-02-01"
         ];
 
@@ -63,11 +69,11 @@ class DepositsTest extends TestCase
     public function test_delete_deposit()
     {
         $formData = [
-            "depositAmount" => 100000,
-            "fee" => 2500,
+            "depositAmount" => 1000.00,
+            "fee" => 25,
             "exchangeToken" => "USDT",
-            "exchangePrice" => 5129,
-            "totalAmount" => 1245132,
+            "exchangePrice" => 51.29,
+            "totalAmount" => 12451.32,
             "depositDate" => "2024-02-01"
         ];
 
