@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Crypto;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CryptoResource;
 use App\Http\Resources\TradesResource;
 use App\Models\Crypto\Crypto;
 use Illuminate\Http\Request;
@@ -20,7 +21,7 @@ class CryptosController extends Controller
         $cryptos = Crypto::all();
 
         return response()->json([
-            "data" => $cryptos
+            "cryptos" => $cryptos
         ]);
     }
 
@@ -36,14 +37,19 @@ class CryptosController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Get the crypto and the trades with it
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Crypto $crypto)
     {
-        //
+        $crypto->load('trades');
+        $resource = new CryptoResource($crypto);
+
+        return response()->json([
+            "crypto" => $resource
+        ]);
     }
 
     /**

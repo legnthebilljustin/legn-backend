@@ -53,7 +53,7 @@ class DepositsController extends Controller
             "depositAmount", "fee", "exchangePrice", "totalAmount"
         ];
 
-        $converted = $this->currencyService->convertToCents($request, $propertiesToConvert);
+        $converted = $this->currencyService->convertToCents($validated, $propertiesToConvert);
 
         $newDeposit = Deposit::create($converted);
         $resource = new DepositsResource($newDeposit);

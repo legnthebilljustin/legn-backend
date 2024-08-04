@@ -7,6 +7,7 @@ use App\Http\Requests\Crypto\StoreTradeRequest;
 use App\Http\Resources\TradesResource;
 use App\Models\Crypto\Trade;
 use App\Repositories\Crypto\TradesRepository;
+use InvalidArgumentException;
 
 class TradesController extends Controller
 {
@@ -27,13 +28,12 @@ class TradesController extends Controller
     public function store(StoreTradeRequest $request)
     {
         $validated = $request->validated();
-
-        $trade = Trade::create($validated);
+        $trade = $this->tradesRepo->saveTrade($validated);
 
         $resource = new TradesResource($trade);
 
         return response()->json([
-            "data" => $resource
+            "trade" => $resource
         ]);
     }
 

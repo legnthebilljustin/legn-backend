@@ -34,7 +34,7 @@ class StoreTradeRequest extends FormRequest
             "fee" => "required|numeric",
             "receivedCryptoAmount" => "required|numeric",
             "finalCryptoAmount" => "required|numeric",
-            "tradeDate" => "required|date",
+            "tradeDate" => "required|date|before_or_equal:today",
         ];
     }
 }

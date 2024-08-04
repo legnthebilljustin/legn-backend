@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TradesResource extends JsonResource
+class CryptoResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,12 +16,9 @@ class TradesResource extends JsonResource
     {
         return [
             "uuid" => $this->uuid,
-            "entryPrice" => $this->entryPrice,
-            "amountUSD" => $this->amountUSD,
-            "fee" => $this->fee,
-            "finalCryptoAmount" => $this->finalCryptoAmount,
-            "tradeDate" => $this->tradeDate->toDateString(),
-            "crypto" => $this->whenLoaded("crypto")
+            "name" => $this->name,
+            "code" => $this->code,
+            "trades" => TradesResource::collection($this->whenLoaded("trades"))
         ];
     }
 }

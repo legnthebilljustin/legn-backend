@@ -29,7 +29,7 @@ class StoreDepositsRequest extends FormRequest
             "exchangeToken" => "required|string",
             "exchangePrice" => "required|numeric",
             "totalAmount" => "required|numeric",
-            "depositDate" => "required|date"
+            "depositDate" => "required|date|before_or_equal:today"
         ];
     }
 }
